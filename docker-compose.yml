@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "8000:8000"
+      - "8443:8443"  # HTTPS порт
+    environment:
+      - AUTH_SERVICE_URL=http://auth-service:8001
+      - DATA_SERVICE_URL=http://data-service:8002
+      - LOGGING_SERVICE_URL=http://logging-service:8003
+    volumes:
+      - ./certs:/app/certs:ro
+    depends_on:
+      - auth-service
+      - data-service
+      - logging-service
+    networks:
+      - microservices-network
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    ports:
+      - "8001:8001"
+    volumes:
+      - auth-db:/app
+    networks:
+      - microservices-network
+
+  data-service:
+    build: ./data-service
+    container_name: data-service
+    ports:
+      - "8002:8002"
+    environment:
+      - AUTH_SERVICE_URL=http://auth-service:8001
+    volumes:
+      - data-db:/app
+    depends_on:
+      - auth-service
+    networks:
+      - microservices-network
+
+  logging-service:
+    build: ./logging-service
+    container_name: logging-service
+    ports:
+      - "8003:8003"
+    volumes:
+      - logs-db:/app
+    networks:
+      - microservices-network
+
+volumes:
+  auth-db:
+  data-db:
+  logs-db:
+
+networks:
+  microservices-network:
+    driver: bridge
+
