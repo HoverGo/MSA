@@ -153,7 +153,7 @@ async def login(
     
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username, "role": user.role.value},
+        data={"sub": user.username, "role": user.role},
         expires_delta=access_token_expires
     )
     
@@ -177,7 +177,7 @@ async def get_user(
     db: AsyncSession = Depends(get_db)
 ):
     """Получение информации о пользователе (только для админов)"""
-    if current_user.role != UserRole.ADMIN:
+    if current_user.role != UserRole.ADMIN.value:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not enough permissions"
