@@ -30,6 +30,9 @@ class TokenData(BaseModel):
 class TokenVerifyRequest(BaseModel):
     token: str
 
+class DynamicTokenVerifyRequest(BaseModel):
+    token: str
+
 class APIKeyCreate(BaseModel):
     name: str
     permissions: Optional[List[str]] = None

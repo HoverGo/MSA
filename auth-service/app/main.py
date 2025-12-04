@@ -19,7 +19,7 @@ from jwt import PyJWT
 from .models import User, Base, UserRole, APIKey, DynamicToken
 from .schemas import (
     UserCreate, UserResponse, Token, TokenData,
-    TokenVerifyRequest,
+    TokenVerifyRequest, DynamicTokenVerifyRequest,
     APIKeyCreate, APIKeyResponse, DynamicTokenResponse,
     HMACSignature
 )
@@ -338,14 +338,14 @@ async def create_dynamic_token(
 
 @app.post("/verify-dynamic-token")
 async def verify_dynamic_token(
-    token: str,
+    request: DynamicTokenVerifyRequest,
     db: AsyncSession = Depends(get_db)
 ):
     """Проверка динамического токена"""
     from sqlalchemy import select
     result = await db.execute(
         select(DynamicToken).where(
-            DynamicToken.token == token,
+            DynamicToken.token == request.token,
             DynamicToken.is_active == True
         )
     )
