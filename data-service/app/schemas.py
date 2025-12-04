@@ -15,7 +15,7 @@ class DataItemResponse(BaseModel):
     id: int
     title: str
     content: str
-    owner_id: int
+    owner_id: str
     created_at: datetime
     updated_at: datetime
     
