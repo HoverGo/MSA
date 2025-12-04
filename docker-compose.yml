@@ -25,8 +25,6 @@ services:
     container_name: auth-service
     ports:
       - "8001:8001"
-    volumes:
-      - auth-db:/app
     networks:
       - microservices-network
 
@@ -37,8 +35,6 @@ services:
       - "8002:8002"
     environment:
       - AUTH_SERVICE_URL=http://auth-service:8001
-    volumes:
-      - data-db:/app
     depends_on:
       - auth-service
     networks:
@@ -49,15 +45,8 @@ services:
     container_name: logging-service
     ports:
       - "8003:8003"
-    volumes:
-      - logs-db:/app
     networks:
       - microservices-network
-
-volumes:
-  auth-db:
-  data-db:
-  logs-db:
 
 networks:
   microservices-network:
