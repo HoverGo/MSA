@@ -27,6 +27,9 @@ class TokenData(BaseModel):
     username: Optional[str] = None
     role: Optional[str] = None
 
+class TokenVerifyRequest(BaseModel):
+    token: str
+
 class APIKeyCreate(BaseModel):
     name: str
     permissions: Optional[List[str]] = None

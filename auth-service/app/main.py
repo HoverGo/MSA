@@ -19,6 +19,7 @@ from jwt import PyJWT
 from .models import User, Base, UserRole, APIKey, DynamicToken
 from .schemas import (
     UserCreate, UserResponse, Token, TokenData,
+    TokenVerifyRequest,
     APIKeyCreate, APIKeyResponse, DynamicTokenResponse,
     HMACSignature
 )
@@ -202,10 +203,10 @@ async def get_user(
     )
 
 @app.post("/verify-token")
-async def verify_jwt_token(token: str):
+async def verify_jwt_token(request: TokenVerifyRequest):
     """Проверка JWT токена"""
     try:
-        payload = verify_token(token)
+        payload = verify_token(request.token)
         return {"valid": True, "payload": payload}
     except Exception as e:
         raise HTTPException(
